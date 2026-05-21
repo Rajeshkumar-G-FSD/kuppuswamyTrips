@@ -231,3 +231,39 @@ export async function deleteGalleryItemFromFirestore(itemId: string) {
   }
 }
 
+// 🔥 Danger Zone: Full firebase database cleanup helper
+export async function clearAndResetFirebase() {
+  try {
+    // 1. Clear Expenses
+    const expSnap = await getDocs(collection(db, "expenses"));
+    for (const d of expSnap.docs) {
+      await deleteDoc(doc(db, "expenses", d.id));
+    }
+
+    // 2. Clear Trips
+    const tripSnap = await getDocs(collection(db, "trips"));
+    for (const d of tripSnap.docs) {
+      await deleteDoc(doc(db, "trips", d.id));
+    }
+
+    // 3. Clear Members
+    const memSnap = await getDocs(collection(db, "members"));
+    for (const d of memSnap.docs) {
+      await deleteDoc(doc(db, "members", d.id));
+    }
+
+    // 4. Clear Gallery Photos
+    const galSnap = await getDocs(collection(db, "gallery"));
+    for (const d of galSnap.docs) {
+      await deleteDoc(doc(db, "gallery", d.id));
+    }
+
+    console.log("Firestore database has been completely wiped of active data records.");
+    return true;
+  } catch (error) {
+    handleFirestoreError(error, OperationType.DELETE, "all_collections");
+    throw error;
+  }
+}
+
+

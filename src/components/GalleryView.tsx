@@ -43,7 +43,7 @@ interface GalleryViewProps {
 }
 
 // Beautiful default curated images for initial user experience
-const DEFAULT_MEMORIES: GalleryItem[] = [
+export const DEFAULT_MEMORIES: GalleryItem[] = [
   {
     id: 'mem_1',
     tripId: 'trip_2',

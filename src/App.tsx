@@ -13,7 +13,8 @@ import {
   CheckCircle,
   HelpCircle,
   TrendingDown,
-  Info
+  Info,
+  Sparkles
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 
@@ -39,8 +40,12 @@ import {
   saveMemberToFirestore,
   loadExpensesFromFirestore,
   saveExpenseToFirestore,
-  deleteExpenseFromFirestore
+  deleteExpenseFromFirestore,
+  clearAndResetFirebase,
+  saveGalleryItemToFirestore
 } from './firebase';
+import { DEFAULT_MEMORIES } from './components/GalleryView';
+
 
 export default function App() {
   // Global Application States
@@ -157,6 +162,7 @@ export default function App() {
       memberIds: activeTrip ? [...activeTrip.memberIds] : ['member_6', 'member_7'], // share active members list
     };
 
+    saveTripToFirestore(newTripItem);
     setTrips([newTripItem, ...trips]);
     setActiveTripId(nextId);
     setShowAddTripModal(false);
@@ -347,6 +353,42 @@ export default function App() {
     toDelete.forEach((e) => deleteExpenseFromFirestore(e.id));
   };
 
+  // Full database erase & optional reseed
+  const handleFullReset = async (mode: 'blank' | 'reseed') => {
+    try {
+      await clearAndResetFirebase();
+      if (mode === 'blank') {
+        setTrips([]);
+        setMembers([]);
+        setExpenses([]);
+        setActiveTripId('');
+      } else {
+        // Reseed Firestore
+        for (const t of INITIAL_TRIPS) {
+          await saveTripToFirestore(t);
+        }
+        for (const m of INITIAL_MEMBERS) {
+          await saveMemberToFirestore(m);
+        }
+        for (const e of INITIAL_EXPENSES) {
+          await saveExpenseToFirestore(e);
+        }
+        for (const imgItem of DEFAULT_MEMORIES) {
+          await saveGalleryItemToFirestore(imgItem);
+        }
+
+        // Reseed state variables
+        setTrips(INITIAL_TRIPS);
+        setMembers(INITIAL_MEMBERS);
+        setExpenses(INITIAL_EXPENSES);
+        setActiveTripId('trip_2');
+      }
+    } catch (err) {
+      console.error("Full Reset flow failed to complete: ", err);
+      throw err;
+    }
+  };
+
   // Switch to Dashboard
   const handleGetStartedLogin = () => {
     setActiveView('dashboard');
@@ -354,6 +396,44 @@ export default function App() {
 
   // Render Page Content Layout
   const renderWorkspaceView = () => {
+    // Elegant Empty State when database contains 0 trips
+    if (!activeTrip && activeView !== 'settings' && activeView !== 'help' && activeView !== 'trips') {
+      return (
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex-grow flex flex-col items-center justify-center p-6 text-center max-w-lg mx-auto w-full min-h-[60vh]"
+        >
+          <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-6 border-2 border-primary/20 shadow-xs animate-pulse">
+            <MapPin className="w-10 h-10 text-primary" />
+          </div>
+          <h2 className="text-2xl font-extrabold text-on-surface tracking-tight mb-2">Adventure Awaits!</h2>
+          <p className="text-sm text-on-surface-variant font-medium leading-relaxed mb-8">
+            Your Firebase Firestore database is clean and completely fresh. You can begin from raw scratch, or instantly restore the default pre-configured family tour ledger.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
+            <button
+              onClick={() => handleFullReset('reseed')}
+              className="bg-primary hover:bg-primary-container text-on-primary font-bold text-xs py-3.5 px-6 rounded-full shadow-md flex items-center justify-center gap-2 cursor-pointer transition-all hover:scale-102"
+            >
+              <Sparkles className="w-4 h-4 text-on-primary" />
+              <span>Restore Default May 2026 Tour Ledger</span>
+            </button>
+            <button
+              onClick={() => setShowAddTripModal(true)}
+              className="bg-surface-bright border border-outline-variant/30 text-on-surface hover:bg-surface-variant/20 font-bold text-xs py-3.5 px-6 rounded-full shadow-xs flex items-center justify-center gap-2 cursor-pointer transition-all hover:scale-102"
+            >
+              <Plus className="w-4 h-4 text-primary" />
+              <span>Add Custom Trip</span>
+            </button>
+          </div>
+          <p className="text-xs text-on-surface-variant mt-6">
+            Or configure settings inside the <button onClick={() => setActiveView('settings')} className="text-primary font-bold hover:underline">Settings Panel</button>.
+          </p>
+        </motion.div>
+      );
+    }
+
     switch (activeView) {
       case 'dashboard':
         return activeTrip ? (
@@ -427,13 +507,14 @@ export default function App() {
           />
         ) : null;
       case 'settings':
-        return activeTrip ? (
+        return (
           <SettingsView
-            activeTrip={activeTrip}
+            activeTrip={activeTrip!}
             onUpdateTrip={handleUpdateTrip}
             onClearAllExpenses={handleClearAllExpenses}
+            onFullReset={handleFullReset}
           />
-        ) : null;
+        );
       case 'help':
         return (
           <motion.div
