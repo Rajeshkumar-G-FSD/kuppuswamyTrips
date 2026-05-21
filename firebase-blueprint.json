@@ -1,0 +1,83 @@
+{
+  "entities": {
+    "Trip": {
+      "title": "Trip",
+      "description": "Represents an individual tour or trip adventure workspace.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "dateRange": { "type": "string" },
+        "status": { "type": "string" },
+        "coverImage": { "type": "string" },
+        "memberIds": { "type": "array" },
+        "totalEstimate": { "type": "number" }
+      },
+      "required": ["id", "name", "dateRange", "memberIds"]
+    },
+    "Member": {
+      "title": "Member",
+      "description": "Represents a family member participating in the trip expense splits.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "initials": { "type": "string" },
+        "avatarUrl": { "type": "string" },
+        "email": { "type": "string" }
+      },
+      "required": ["id", "name", "initials"]
+    },
+    "Expense": {
+      "title": "Expense",
+      "description": "Represents an individual action/event expense logged on a specific day of a trip.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "tripId": { "type": "string" },
+        "day": { "type": "integer" },
+        "mealType": { "type": "string" },
+        "title": { "type": "string" },
+        "amount": { "type": "number" },
+        "paidById": { "type": "string" },
+        "category": { "type": "string" },
+        "notes": { "type": "string" },
+        "dateCreated": { "type": "string" },
+        "skipped": { "type": "boolean" }
+      },
+      "required": ["id", "tripId", "day", "mealType", "title", "amount", "paidById", "category", "dateCreated"]
+    },
+    "Login": {
+      "title": "Login",
+      "description": "Administrator login credentials cached in secure storage.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "username": { "type": "string" },
+        "password": { "type": "string" },
+        "role": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["username", "password", "role"]
+    }
+  },
+  "firestore": {
+    "/trips/{tripId}": {
+      "schema": "Trip",
+      "description": "Master list of trip workspaces."
+    },
+    "/members/{memberId}": {
+      "schema": "Member",
+      "description": "Master list of registered trip participant family members."
+    },
+    "/expenses/{expenseId}": {
+      "schema": "Expense",
+      "description": "All activities, events, meals, and snacks logged for a trip."
+    },
+    "/logins/{loginId}": {
+      "schema": "Login",
+      "description": "Master list of validated administrator logins."
+    }
+  }
+}

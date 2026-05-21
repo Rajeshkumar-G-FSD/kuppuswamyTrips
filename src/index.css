@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #1d4ed8;
+  --color-primary-container: #1e40af;
+  --color-on-primary: #ffffff;
+  --color-primary-fixed: #3b82f6;
+  --color-primary-fixed-dim: #60a5fa;
+  --color-secondary: #0d9488;
+  --color-secondary-container: #115e59;
+  --color-background: #f8fafc;
+  --color-surface: #ffffff;
+  --color-surface-bright: #ffffff;
+  --color-surface-container: #f1f5f9;
+  --color-surface-container-high: #e2e8f0;
+  --color-surface-container-highest: #cbd5e1;
+  --color-surface-lowest: #ffffff;
+  --color-on-background: #0f172a;
+  --color-on-surface: #1e293b;
+  --color-on-surface-variant: #64748b;
+  --color-outline: #94a3b8;
+  --color-outline-variant: #94a3b8;
+  --color-tertiary: #6d28d9;
+  --color-tertiary-container: #7c3aec;
+  --color-tertiary-fixed: #8b5cf6;
+  --color-tertiary-fixed-dim: #a78bfa;
+  --color-error: #ef4444;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+@layer utilities {
+  .glass-card {
+    background-color: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(226, 232, 240, 0.5);
+  }
+  
+  .glass-card-hover {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .glass-card-hover:hover {
+    transform: translateY(-2px);
+    border-color: rgba(30, 64, 175, 0.15);
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05);
+  }
+
+  /* Custom scrollbar hides */
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-none {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-on-background);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}

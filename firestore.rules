@@ -1,0 +1,33 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Trips Match
+    match /trips/{tripId} {
+      allow read: if true;
+      allow write: if request.resource.data.name is string && request.resource.data.name.size() < 100;
+    }
+
+    // Members Match
+    match /members/{memberId} {
+      allow read: if true;
+      allow write: if request.resource.data.name is string && request.resource.data.name.size() < 100;
+    }
+
+    // Expenses Match
+    match /expenses/{expenseId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Logins Match
+    match /logins/{loginId} {
+      allow read: if true;
+      allow write: if true;
+    }
+  }
+}

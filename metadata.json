@@ -1,0 +1,6 @@
+{
+  "name": "Kuppu Swamy Trips",
+  "description": "Pragmatic, interactive family trip expense manager and sharing ledger.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
