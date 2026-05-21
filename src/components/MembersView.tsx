@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { Users, UserPlus, Trash2, ShieldCheck, Mail, Send, Heart, Baby, PlusCircle } from 'lucide-react';
+import { Users, UserPlus, Trash2, ShieldCheck, Mail, Send, Heart, Baby, PlusCircle, X } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Member, Trip, Expense } from '../types';
 import { calculateMemberPaidTotals } from '../utils';
@@ -20,6 +20,7 @@ interface MembersViewProps {
     spouse?: string,
     childrenUnder13?: string[]
   ) => void;
+  onClose?: () => void;
 }
 
 export default function MembersView({
@@ -27,6 +28,7 @@ export default function MembersView({
   members,
   expenses,
   onAddMember,
+  onClose,
 }: MembersViewProps) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -79,12 +81,24 @@ export default function MembersView({
       {/* Left Column: Active list */}
       <div className="flex-grow flex flex-col gap-6">
         <div className="glass-card p-6 rounded-2xl">
-          <div className="flex items-center gap-2 mb-4 border-b border-outline-variant/15 pb-3">
-            <Users className="w-6 h-6 text-primary" />
-            <div>
-              <h3 className="text-lg font-bold text-on-surface">Active Family Members</h3>
-              <p className="text-xs text-on-surface-variant">Members registered for {activeTrip.name}</p>
+          <div className="flex items-center justify-between gap-2 mb-4 border-b border-outline-variant/15 pb-3">
+            <div className="flex items-center gap-2">
+              <Users className="w-6 h-6 text-primary" />
+              <div className="text-left">
+                <h3 className="text-lg font-bold text-on-surface">Active Family Members</h3>
+                <p className="text-xs text-on-surface-variant">Members registered for {activeTrip.name}</p>
+              </div>
             </div>
+            {onClose && (
+              <button
+                type="button"
+                onClick={onClose}
+                className="p-1.5 px-3 hover:bg-surface-variant text-on-surface-variant hover:text-on-surface hover:ring-1 hover:ring-outline-variant/15 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 text-xs font-bold font-sans"
+              >
+                <X className="w-4 h-4 text-primary" />
+                <span>Close</span>
+              </button>
+            )}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

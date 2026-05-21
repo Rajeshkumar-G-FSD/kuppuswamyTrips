@@ -366,6 +366,7 @@ export default function App() {
             onDeleteExpense={handleDeleteExpense}
             onToggleDinnerSkip={handleToggleDinnerSkip}
             onEditExpense={handleEditExpense}
+            onClose={() => setActiveView('dashboard')}
           />
         ) : null;
       case 'members':
@@ -375,6 +376,7 @@ export default function App() {
             members={members}
             expenses={expenses}
             onAddMember={handleAddMember}
+            onClose={() => setActiveView('dashboard')}
           />
         ) : null;
       case 'reports':

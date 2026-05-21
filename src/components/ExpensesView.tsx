@@ -39,6 +39,7 @@ interface ExpensesViewProps {
   onDeleteExpense: (expenseId: string) => void;
   onToggleDinnerSkip: (dayNo: number, isSkipped: boolean) => void;
   onEditExpense: (expenseId: string, updatedData: Partial<Expense>) => void;
+  onClose?: () => void;
 }
 
 export default function ExpensesView({
@@ -49,6 +50,7 @@ export default function ExpensesView({
   onDeleteExpense,
   onToggleDinnerSkip,
   onEditExpense,
+  onClose,
 }: ExpensesViewProps) {
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
   const [selectedDay, setSelectedDay] = useState<number>(1);
@@ -137,10 +139,29 @@ export default function ExpensesView({
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -20 }}
       transition={{ duration: 0.3 }}
-      className="p-4 md:p-6 lg:p-8 max-w-7xl mx-auto w-full flex-1 flex flex-col lg:flex-row gap-6"
+      className="p-4 md:p-6 lg:p-8 max-w-7xl mx-auto w-full flex-grow flex flex-col gap-6"
     >
-      {/* Left Column: Expenses list */}
-      <div className="flex-1 flex flex-col gap-6">
+      {/* Page Header */}
+      <div className="flex justify-between items-center bg-surface-container-low/50 p-4 rounded-xl border border-outline-variant/15 select-none shadow-xs">
+        <div className="text-left">
+          <h2 className="text-lg font-bold text-on-surface">Manage Trip Expenses</h2>
+          <p className="text-xs text-on-surface-variant font-medium">Log breakfast, lunch, tea & snacks, dinner, and other daily bills.</p>
+        </div>
+        {onClose && (
+          <button
+            type="button"
+            onClick={onClose}
+            className="p-1.5 px-3 hover:bg-surface-variant text-on-surface-variant hover:text-on-surface hover:ring-1 hover:ring-outline-variant/15 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 text-xs font-bold font-sans"
+          >
+            <X className="w-4 h-4 text-primary" />
+            <span>Close</span>
+          </button>
+        )}
+      </div>
+
+      <div className="flex flex-col lg:flex-row gap-6">
+        {/* Left Column: Expenses list */}
+        <div className="flex-1 flex flex-col gap-6">
         {/* Day selection tabs */}
         <div className="flex gap-2.5 overflow-x-auto pb-2 border-b border-outline-variant/15 select-none scrollbar-none">
           {(() => {
@@ -705,6 +726,7 @@ export default function ExpensesView({
             )}
           </ul>
         </div>
+      </div>
       </div>
 
       {/* Edit Expense Modal Overlay */}
