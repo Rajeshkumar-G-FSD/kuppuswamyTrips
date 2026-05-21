@@ -23,7 +23,9 @@ import {
   ShieldAlert,
   Loader2,
   ShieldCheck,
-  X
+  X,
+  Heart,
+  Baby
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { verifyLoginFromFirestore } from '../firebase';
@@ -386,9 +388,23 @@ export default function LandingPageView({ onLoginSuccess, members = [], expenses
                                   </div>
                                   <div className="text-left font-sans">
                                     <h5 className="text-xs font-bold text-on-surface">{memb.name}</h5>
-                                    <p className="text-[10px] font-mono text-on-surface-variant leading-none">
+                                    <p className="text-[10px] font-mono text-on-surface-variant leading-none mb-1">
                                       Paid ₹{contributedAmount.toLocaleString('en-IN')}
                                     </p>
+                                    
+                                    {memb.spouse && (
+                                      <p className="text-[9px] text-rose-500 font-bold flex items-center gap-0.5 mt-0.5 leading-none">
+                                        <Heart className="w-2.5 h-2.5 fill-rose-500/20 text-rose-500 inline" />
+                                        <span>Spouse: {memb.spouse}</span>
+                                      </p>
+                                    )}
+
+                                    {memb.childrenUnder13 && memb.childrenUnder13.length > 0 && (
+                                      <p className="text-[9px] text-blue-500 font-bold flex items-center gap-0.5 mt-0.5 leading-none">
+                                        <Baby className="w-2.5 h-2.5 text-blue-500 inline" />
+                                        <span>Kids: {memb.childrenUnder13.join(', ')}</span>
+                                      </p>
+                                    )}
                                   </div>
                                 </div>
 

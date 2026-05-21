@@ -64,7 +64,17 @@ export default function App() {
       }
 
       if (dbMembers && dbMembers.length > 0) {
-        setMembers(dbMembers);
+        // Ensure any new detailed family definitions (spouses/children) get merged & updated in Firestore
+        const upgraded = dbMembers.map(dbM => {
+          const initM = INITIAL_MEMBERS.find(m => m.id === dbM.id || m.name.toLowerCase().includes(dbM.name.toLowerCase()) || dbM.name.toLowerCase().includes(m.name.toLowerCase()));
+          if (initM && (!dbM.spouse && initM.spouse)) {
+            const merged = { ...dbM, ...initM };
+            saveMemberToFirestore(merged);
+            return merged;
+          }
+          return dbM;
+        });
+        setMembers(upgraded);
       } else {
         // Sync original members configuration
         INITIAL_MEMBERS.forEach(m => saveMemberToFirestore(m));
@@ -182,6 +192,20 @@ export default function App() {
     deleteExpenseFromFirestore(expId);
   };
 
+  // Actions: Edit individual expense
+  const handleEditExpense = (expenseId: string, updatedData: Partial<Expense>) => {
+    setExpenses((prevExpenses) => 
+      prevExpenses.map((e) => {
+        if (e.id === expenseId) {
+          const updated = { ...e, ...updatedData };
+          saveExpenseToFirestore(updated);
+          return updated;
+        }
+        return e;
+      })
+    );
+  };
+
   // Actions: Toggle Dinner Skip
   const handleToggleDinnerSkip = (dayNo: number, isSkipped: boolean) => {
     if (isSkipped) {
@@ -219,7 +243,7 @@ export default function App() {
   };
 
   // Actions: Add new family member with optional starting spend amount
-  const handleAddMember = (mName: string, mEmail: string, initialSpend?: number) => {
+  const handleAddMember = (mName: string, mEmail: string, initialSpend?: number, spouse?: string, childrenUnder13?: string[]) => {
     const initials = mName
       .trim()
       .split(' ')
@@ -229,11 +253,25 @@ export default function App() {
       .slice(0, 2);
 
     const mId = `member_${Date.now()}`;
+    
+    // Assemble family note automatically
+    let familyNote = '';
+    if (spouse && spouse.trim()) {
+      familyNote += `Spouse: ${spouse.trim()}`;
+    }
+    if (childrenUnder13 && childrenUnder13.length > 0) {
+      if (familyNote) familyNote += ', ';
+      familyNote += `Kids under 13: ${childrenUnder13.join(', ')}`;
+    }
+
     const newMember: Member = {
       id: mId,
       name: mName.trim(),
       initials,
       email: mEmail || undefined,
+      spouse: spouse?.trim() || undefined,
+      childrenUnder13: childrenUnder13 && childrenUnder13.length > 0 ? childrenUnder13 : undefined,
+      familyNote: familyNote || undefined,
     };
 
     const updatedMembList = [...members, newMember];
@@ -327,6 +365,7 @@ export default function App() {
             onAddExpense={handleAddExpense}
             onDeleteExpense={handleDeleteExpense}
             onToggleDinnerSkip={handleToggleDinnerSkip}
+            onEditExpense={handleEditExpense}
           />
         ) : null;
       case 'members':

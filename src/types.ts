@@ -9,6 +9,9 @@ export interface Member {
   initials: string;
   avatarUrl?: string;
   email?: string;
+  spouse?: string;
+  childrenUnder13?: string[];
+  familyNote?: string;
 }
 
 export type TripStatus = 'Planning' | 'Upcoming' | 'Completed';

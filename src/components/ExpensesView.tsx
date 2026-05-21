@@ -15,7 +15,9 @@ import {
   Trash2,
   ListPlus,
   HelpCircle,
-  CheckCircle
+  CheckCircle,
+  Edit2,
+  X
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Expense, Member, Trip, ExpenseCategory, MealType, Settlement } from '../types';
@@ -36,6 +38,7 @@ interface ExpensesViewProps {
   }) => void;
   onDeleteExpense: (expenseId: string) => void;
   onToggleDinnerSkip: (dayNo: number, isSkipped: boolean) => void;
+  onEditExpense: (expenseId: string, updatedData: Partial<Expense>) => void;
 }
 
 export default function ExpensesView({
@@ -45,7 +48,9 @@ export default function ExpensesView({
   onAddExpense,
   onDeleteExpense,
   onToggleDinnerSkip,
+  onEditExpense,
 }: ExpensesViewProps) {
+  const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
   const [selectedDay, setSelectedDay] = useState<number>(1);
   const [formDay, setFormDay] = useState<number>(1);
   const [amount, setAmount] = useState<string>('');
@@ -207,6 +212,14 @@ export default function ExpensesView({
                           </div>
                           <button
                             type="button"
+                            onClick={() => setEditingExpense(exp)}
+                            className="text-on-surface-variant hover:text-primary hover:bg-primary/10 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity focus:outline-none"
+                            title="Edit expense"
+                          >
+                            <Edit2 className="w-4 h-4" />
+                          </button>
+                          <button
+                            type="button"
                             onClick={() => onDeleteExpense(exp.id)}
                             className="text-on-surface-variant hover:text-error hover:bg-error/10 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity focus:outline-none"
                             title="Delete expense"
@@ -261,6 +274,14 @@ export default function ExpensesView({
                           </div>
                           <button
                             type="button"
+                            onClick={() => setEditingExpense(exp)}
+                            className="text-on-surface-variant hover:text-primary hover:bg-primary/10 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity focus:outline-none"
+                            title="Edit expense"
+                          >
+                            <Edit2 className="w-4 h-4" />
+                          </button>
+                          <button
+                            type="button"
                             onClick={() => onDeleteExpense(exp.id)}
                             className="text-on-surface-variant hover:text-error hover:bg-error/10 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity focus:outline-none"
                             title="Delete expense"
@@ -313,6 +334,14 @@ export default function ExpensesView({
                             <p className="font-bold text-on-surface text-sm font-mono">₹{exp.amount.toFixed(2)}</p>
                             <span className="text-[10px] text-indigo-500 font-bold inline-block">Shared tea list</span>
                           </div>
+                          <button
+                            type="button"
+                            onClick={() => setEditingExpense(exp)}
+                            className="text-on-surface-variant hover:text-primary hover:bg-primary/10 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity focus:outline-none"
+                            title="Edit expense"
+                          >
+                            <Edit2 className="w-4 h-4" />
+                          </button>
                           <button
                             type="button"
                             onClick={() => onDeleteExpense(exp.id)}
@@ -407,6 +436,14 @@ export default function ExpensesView({
                               </div>
                               <button
                                 type="button"
+                                onClick={() => setEditingExpense(exp)}
+                                className="text-on-surface-variant hover:text-primary hover:bg-primary/10 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity focus:outline-none"
+                                title="Edit expense"
+                              >
+                                <Edit2 className="w-4 h-4" />
+                              </button>
+                              <button
+                                type="button"
                                 onClick={() => onDeleteExpense(exp.id)}
                                 className="text-on-surface-variant hover:text-error hover:bg-error/10 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity focus:outline-none"
                                 title="Delete expense"
@@ -463,6 +500,14 @@ export default function ExpensesView({
                             <p className="font-bold text-on-surface text-sm font-mono">₹{exp.amount.toFixed(2)}</p>
                             <span className="text-[10px] text-primary font-bold inline-block">Shared Cost</span>
                           </div>
+                          <button
+                            type="button"
+                            onClick={() => setEditingExpense(exp)}
+                            className="text-on-surface-variant hover:text-primary hover:bg-primary/10 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity focus:outline-none"
+                            title="Edit expense"
+                          >
+                            <Edit2 className="w-4 h-4" />
+                          </button>
                           <button
                             type="button"
                             onClick={() => onDeleteExpense(exp.id)}
@@ -661,6 +706,216 @@ export default function ExpensesView({
           </ul>
         </div>
       </div>
+
+      {/* Edit Expense Modal Overlay */}
+      <AnimatePresence>
+        {editingExpense && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-surface-container-high rounded-2xl p-6 shadow-xl w-full max-w-md border border-outline-variant/15 text-left"
+            >
+              <div className="flex justify-between items-center border-b border-outline-variant/10 pb-3 mb-4">
+                <h3 className="text-base font-bold text-on-surface flex items-center gap-1.5">
+                  <Edit2 className="w-4.5 h-4.5 text-primary" />
+                  <span>Edit Expense Details</span>
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setEditingExpense(null)}
+                  className="p-1 px-1.5 text-on-surface-variant hover:text-on-surface rounded-lg hover:bg-surface-variant/40"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Edit form */}
+              <form onSubmit={(e) => {
+                e.preventDefault();
+                if (!editingExpense.amount || editingExpense.amount <= 0) {
+                  return;
+                }
+                if (!editingExpense.title.trim()) {
+                  return;
+                }
+                
+                onEditExpense(editingExpense.id, {
+                  amount: editingExpense.amount,
+                  title: editingExpense.title.trim(),
+                  paidById: editingExpense.paidById,
+                  day: editingExpense.day,
+                  category: editingExpense.category,
+                  mealType: editingExpense.mealType,
+                  notes: editingExpense.notes?.trim() || undefined
+                });
+
+                setEditingExpense(null);
+              }} className="space-y-4">
+                {/* Edit amount */}
+                <div>
+                  <label className="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">
+                    Amount (₹)
+                  </label>
+                  <input
+                    type="number"
+                    step="any"
+                    value={editingExpense.amount || ''}
+                    onChange={(e) => setEditingExpense({
+                      ...editingExpense,
+                      amount: parseFloat(e.target.value) || 0
+                    })}
+                    required
+                    className="bg-surface-bright border border-outline-variant/30 text-on-surface text-sm rounded-lg focus:ring-2 focus:ring-primary block w-full p-2.5 outline-none font-mono font-medium"
+                  />
+                </div>
+
+                {/* Edit Title */}
+                <div>
+                  <label className="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">
+                    Title / Item Description
+                  </label>
+                  <input
+                    type="text"
+                    value={editingExpense.title}
+                    onChange={(e) => setEditingExpense({
+                      ...editingExpense,
+                      title: e.target.value
+                    })}
+                    required
+                    className="bg-surface-bright border border-outline-variant/30 text-on-surface text-sm rounded-lg focus:ring-2 focus:ring-primary block w-full p-2.5 outline-none font-medium"
+                  />
+                </div>
+
+                {/* Payer and Day Grid */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">
+                      Who Paid?
+                    </label>
+                    <select
+                      value={editingExpense.paidById}
+                      onChange={(e) => setEditingExpense({
+                        ...editingExpense,
+                        paidById: e.target.value
+                      })}
+                      className="bg-surface-bright border border-outline-variant/30 text-on-surface text-xs rounded-lg focus:ring-2 focus:ring-primary block w-full p-2 cursor-pointer outline-none font-semibold"
+                    >
+                      {tripMembers.map((m) => (
+                        <option key={m.id} value={m.id}>
+                          {m.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">
+                      Which Day?
+                    </label>
+                    <select
+                      value={editingExpense.day}
+                      onChange={(e) => setEditingExpense({
+                        ...editingExpense,
+                        day: parseInt(e.target.value) || 1
+                      })}
+                      className="bg-surface-bright border border-outline-variant/30 text-on-surface text-xs rounded-lg focus:ring-2 focus:ring-primary block w-full p-2 cursor-pointer outline-none font-semibold"
+                    >
+                      <option value={1}>Day 1</option>
+                      <option value={2}>Day 2</option>
+                      <option value={3}>Day 3</option>
+                      <option value={4}>Day 4</option>
+                      <option value={5}>Day 5</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Category & Section Grid */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">
+                      Category
+                    </label>
+                    <select
+                      value={editingExpense.category}
+                      onChange={(e) => setEditingExpense({
+                        ...editingExpense,
+                        category: e.target.value as ExpenseCategory
+                      })}
+                      className="bg-surface-bright border border-outline-variant/30 text-on-surface text-xs rounded-lg focus:ring-2 focus:ring-primary block w-full p-2 cursor-pointer outline-none font-semibold"
+                    >
+                      <option value="Food">Food &amp; Dining</option>
+                      <option value="Transport">Transport</option>
+                      <option value="Accommodation">Accommodation</option>
+                      <option value="Activities">Activities</option>
+                      <option value="Tea & Snacks">Tea &amp; Snacks</option>
+                      <option value="Sightseeing">Sightseeing</option>
+                      <option value="Shopping">Shopping</option>
+                      <option value="Medical">Medical</option>
+                      <option value="Other">Other Items</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">
+                      Trip Section
+                    </label>
+                    <select
+                      value={editingExpense.mealType}
+                      onChange={(e) => setEditingExpense({
+                        ...editingExpense,
+                        mealType: e.target.value as MealType
+                      })}
+                      className="bg-surface-bright border border-outline-variant/30 text-on-surface text-xs rounded-lg focus:ring-2 focus:ring-primary block w-full p-2 cursor-pointer outline-none font-semibold"
+                    >
+                      <option value="Breakfast">Breakfast</option>
+                      <option value="Lunch">Lunch</option>
+                      <option value="Tea & Snacks">Tea &amp; Snacks</option>
+                      <option value="Dinner">Dinner</option>
+                      <option value="Other">Other Category</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Notes */}
+                <div>
+                  <label className="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">
+                    Notes (Optional)
+                  </label>
+                  <input
+                    type="text"
+                    value={editingExpense.notes || ''}
+                    onChange={(e) => setEditingExpense({
+                      ...editingExpense,
+                      notes: e.target.value
+                    })}
+                    placeholder="Add extra details..."
+                    className="bg-surface-bright border border-outline-variant/30 text-on-surface text-xs rounded-lg focus:ring-2 focus:ring-primary block w-full p-2.5 outline-none font-medium"
+                  />
+                </div>
+
+                {/* Submit updates button */}
+                <div className="flex gap-2.5 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setEditingExpense(null)}
+                    className="flex-1 text-on-surface bg-surface-container-high hover:bg-surface-variant font-semibold rounded-lg text-xs px-4 py-2.5 text-center transition-all cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex-1 text-on-primary bg-primary hover:bg-primary-container font-semibold rounded-lg text-xs px-4 py-2.5 text-center transition-all cursor-pointer shadow-xs"
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }

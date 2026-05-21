@@ -11,24 +11,36 @@ export const INITIAL_MEMBERS: Member[] = [
     name: 'Prakash',
     initials: 'PR',
     avatarUrl: '',
+    spouse: 'Karpagam',
+    childrenUnder13: ['Sambu', 'Nenthira'],
+    familyNote: 'Spouse: Karpagam, Kids under 13: Sambu, Nenthira'
   },
   {
     id: 'member_7',
     name: 'Bhuvanesh',
     initials: 'BH',
     avatarUrl: '',
+    spouse: 'Poongodi',
+    childrenUnder13: ['Praneeth'],
+    familyNote: 'Spouse: Poongodi, Kid under 13: Praneeth'
   },
   {
     id: 'member_8',
-    name: 'Gnanakumar',
-    initials: 'GK',
+    name: 'Gnanakumar-Rajesh Family',
+    initials: 'GR',
     avatarUrl: '',
+    spouse: 'Singaraveluu, Vaideki',
+    childrenUnder13: ['Thanusiya', 'Deva'],
+    familyNote: 'Adults: Singaraveluu, Vaideki, Kids under 13: Thanusiya, Deva'
   },
   {
     id: 'member_9',
     name: 'Rajeshkumar',
     initials: 'RK',
     avatarUrl: '',
+    spouse: 'Vanithasree, Shanthi',
+    childrenUnder13: ['Krithiv'],
+    familyNote: 'Adults: Vanithasree, Shanthi, Kid under 13: Krithiv'
   },
 ];
 
