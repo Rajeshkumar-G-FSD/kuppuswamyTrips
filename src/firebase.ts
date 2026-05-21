@@ -199,3 +199,35 @@ export async function deleteExpenseFromFirestore(expenseId: string) {
     handleFirestoreError(e, OperationType.DELETE, `expenses/${expenseId}`);
   }
 }
+
+// 📸 Gallery persistence sync helpers
+export async function loadGalleryFromFirestore() {
+  try {
+    const snap = await getDocs(collection(db, "gallery"));
+    const list: any[] = [];
+    snap.forEach((d) => {
+      list.push({ id: d.id, ...d.data() });
+    });
+    return list;
+  } catch (e) {
+    handleFirestoreError(e, OperationType.LIST, "gallery");
+    return null;
+  }
+}
+
+export async function saveGalleryItemToFirestore(item: any) {
+  try {
+    await setDoc(doc(db, "gallery", item.id), item);
+  } catch (e) {
+    handleFirestoreError(e, OperationType.WRITE, `gallery/${item.id}`);
+  }
+}
+
+export async function deleteGalleryItemFromFirestore(itemId: string) {
+  try {
+    await deleteDoc(doc(db, "gallery", itemId));
+  } catch (e) {
+    handleFirestoreError(e, OperationType.DELETE, `gallery/${itemId}`);
+  }
+}
+

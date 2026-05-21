@@ -14,7 +14,9 @@ import {
   Plus, 
   HelpCircle, 
   LogOut,
-  X
+  X,
+  PieChart,
+  Camera
 } from 'lucide-react';
 import { Trip } from '../types';
 
@@ -42,6 +44,8 @@ export default function Sidebar({
     { id: 'trips', name: 'Trips', icon: Plane },
     { id: 'members', name: 'Family Members', icon: Users },
     { id: 'expenses', name: 'Expenses', icon: Receipt },
+    { id: 'spending-details', name: 'Spending Details', icon: PieChart },
+    { id: 'gallery', name: 'Gallery', icon: Camera },
     { id: 'reports', name: 'Reports', icon: BarChart3 },
     { id: 'settings', name: 'Settings', icon: Settings },
   ];

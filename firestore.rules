@@ -29,5 +29,11 @@ service cloud.firestore {
       allow read: if true;
       allow write: if true;
     }
+
+    // Gallery Match
+    match /gallery/{galleryId} {
+      allow read: if true;
+      allow write: if true;
+    }
   }
 }

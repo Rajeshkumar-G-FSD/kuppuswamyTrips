@@ -57,4 +57,115 @@ export const INITIAL_TRIPS: Trip[] = [
   }
 ];
 
-export const INITIAL_EXPENSES: Expense[] = [];
+export const INITIAL_EXPENSES: Expense[] = [
+  {
+    id: 'exp_1',
+    tripId: 'trip_2',
+    day: 1,
+    mealType: 'Breakfast',
+    title: 'Pancakes and Berry breakfast',
+    amount: 1540.00,
+    paidById: 'member_6',
+    category: 'Food',
+    dateCreated: '2026-05-10T08:30:00Z'
+  },
+  {
+    id: 'exp_2',
+    tripId: 'trip_2',
+    day: 1,
+    mealType: 'Other',
+    title: 'Airport Taxi Transfer',
+    amount: 2800.00,
+    paidById: 'member_7',
+    category: 'Transport',
+    dateCreated: '2026-05-10T11:00:00Z'
+  },
+  {
+    id: 'exp_3',
+    tripId: 'trip_2',
+    day: 1,
+    mealType: 'Lunch',
+    title: 'Local Seafood Platters',
+    amount: 6200.00,
+    paidById: 'member_8',
+    category: 'Food',
+    dateCreated: '2026-05-10T13:30:00Z'
+  },
+  {
+    id: 'exp_4',
+    tripId: 'trip_2',
+    day: 1,
+    mealType: 'Other',
+    title: 'Beach Resort Booking Deposit',
+    amount: 32000.00,
+    paidById: 'member_8',
+    category: 'Accommodation',
+    dateCreated: '2026-05-10T16:00:00Z'
+  },
+  {
+    id: 'exp_5',
+    tripId: 'trip_2',
+    day: 1,
+    mealType: 'Dinner',
+    title: 'Classic Italian Seafood Dinner',
+    amount: 7800.00,
+    paidById: 'member_8',
+    category: 'Food',
+    dateCreated: '2026-05-10T20:30:00Z'
+  },
+  {
+    id: 'exp_6',
+    tripId: 'trip_2',
+    day: 2,
+    mealType: 'Breakfast',
+    title: 'Street Alley Espresso & Coffee',
+    amount: 850.00,
+    paidById: 'member_7',
+    category: 'Food',
+    dateCreated: '2026-05-11T09:00:00Z'
+  },
+  {
+    id: 'exp_7',
+    tripId: 'trip_2',
+    day: 2,
+    mealType: 'Other',
+    title: 'Local Sights Flight Tickets',
+    amount: 14500.00,
+    paidById: 'member_7',
+    category: 'Transport',
+    dateCreated: '2026-05-11T11:30:00Z'
+  },
+  {
+    id: 'exp_8',
+    tripId: 'trip_2',
+    day: 2,
+    mealType: 'Other',
+    title: 'Deep Sea Scuba diving',
+    amount: 18500.00,
+    paidById: 'member_6',
+    category: 'Activities',
+    dateCreated: '2026-05-11T14:45:00Z'
+  },
+  {
+    id: 'exp_9',
+    tripId: 'trip_2',
+    day: 2,
+    mealType: 'Other',
+    title: 'Ancient Museum Visit Tickets',
+    amount: 3200.00,
+    paidById: 'member_9',
+    category: 'Sightseeing',
+    dateCreated: '2026-05-11T16:30:00Z'
+  },
+  {
+    id: 'exp_10',
+    tripId: 'trip_2',
+    day: 2,
+    mealType: 'Dinner',
+    title: 'Grand Beach BBQ banquet',
+    amount: 12400.00,
+    paidById: 'member_6',
+    category: 'Food',
+    dateCreated: '2026-05-11T21:00:00Z'
+  }
+];

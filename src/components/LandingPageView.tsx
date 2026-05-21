@@ -627,7 +627,7 @@ export default function LandingPageView({ onLoginSuccess, members = [], expenses
           </button>
           
           <p className="text-xs text-on-surface-variant text-center md:text-left">
-            © 2024 Kuppu Swamy Trips. All rights reserved. Registered SaaS.
+            © 2026 Kuppu Swamy Trips. All rights reserved Developer by <a href="https://www.datazync.com" target="_blank" rel="noopener noreferrer" className="hover:underline font-bold text-primary">www.datazync.com</a>.
           </p>
           
           <nav className="flex gap-4">

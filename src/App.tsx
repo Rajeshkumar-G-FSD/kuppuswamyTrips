@@ -27,6 +27,8 @@ import ExpensesView from './components/ExpensesView';
 import MembersView from './components/MembersView';
 import ReportsView from './components/ReportsView';
 import SettingsView from './components/SettingsView';
+import SpendingDetailsView from './components/SpendingDetailsView';
+import GalleryView from './components/GalleryView';
 
 import { INITIAL_TRIPS, INITIAL_MEMBERS, INITIAL_EXPENSES } from './data';
 import { Trip, Member, Expense, MealType, ExpenseCategory } from './types';
@@ -82,6 +84,10 @@ export default function App() {
 
       if (dbExpenses && dbExpenses.length > 0) {
         setExpenses(dbExpenses);
+      } else {
+        // Sync original expenses configuration
+        INITIAL_EXPENSES.forEach(e => saveExpenseToFirestore(e));
+        setExpenses(INITIAL_EXPENSES);
       }
     }
     loadData();
@@ -113,6 +119,10 @@ export default function App() {
         return 'Family Members';
       case 'expenses':
         return 'Day Tracker & Expenses';
+      case 'spending-details':
+        return 'Spending Details';
+      case 'gallery':
+        return 'Trip Photo Gallery';
       case 'reports':
         return 'Analytics Report';
       case 'settings':
@@ -184,6 +194,9 @@ export default function App() {
 
     setExpenses([newExp, ...expenses]);
     saveExpenseToFirestore(newExp);
+    
+    // Automatically show the "View Spending Details" page
+    setActiveView('spending-details');
   };
 
   // Actions: Delete individual expense
@@ -316,13 +329,22 @@ export default function App() {
   // Update Trip parameters
   const handleUpdateTrip = (tripId: string, updatedData: Partial<Trip>) => {
     setTrips(
-      trips.map((t) => (t.id === tripId ? { ...t, ...updatedData } : t))
+      trips.map((t) => {
+        if (t.id === tripId) {
+          const updated = { ...t, ...updatedData };
+          saveTripToFirestore(updated);
+          return updated;
+        }
+        return t;
+      })
     );
   };
 
   // Clear all expenses
   const handleClearAllExpenses = (tripId: string) => {
+    const toDelete = expenses.filter((e) => e.tripId === tripId);
     setExpenses(expenses.filter((e) => e.tripId !== tripId));
+    toDelete.forEach((e) => deleteExpenseFromFirestore(e.id));
   };
 
   // Switch to Dashboard
@@ -384,6 +406,24 @@ export default function App() {
           <ReportsView
             activeTrip={activeTrip}
             expenses={expenses}
+          />
+        ) : null;
+      case 'spending-details':
+        return activeTrip ? (
+          <SpendingDetailsView
+            activeTrip={activeTrip}
+            expenses={expenses}
+            members={members}
+            onClose={() => setActiveView('dashboard')}
+          />
+        ) : null;
+      case 'gallery':
+        return activeTrip ? (
+          <GalleryView
+            activeTrip={activeTrip}
+            trips={trips}
+            members={members}
+            onClose={() => setActiveView('dashboard')}
           />
         ) : null;
       case 'settings':
